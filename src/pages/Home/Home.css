@@ -1,0 +1,22 @@
+.navbar {
+    background-color: #393646;
+    height: 3.125rem;
+}
+
+.navbar-collapse {
+    background-color: #393646;
+}
+
+.navbar .nav-link{
+    color: #F4EEE0;
+}
+
+.navbar .navbar-brand{
+    color: #F4EEE0;
+}
+
+.navbar .navbar-brand:hover,
+.navbar .nav-link:hover {
+    color: #E94560;
+    border-bottom: solid 1px #E94560;
+}
