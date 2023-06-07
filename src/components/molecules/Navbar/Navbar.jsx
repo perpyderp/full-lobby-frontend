@@ -27,7 +27,7 @@ const Navbar = () => {
           </li>
           <li className="nav-item">
             <img
-              src="/profile-image.png" // Replace with your profile image URL
+              src="/profile-image.png"
               alt="Profile"
               className="nav-link rounded-circle"
               style={{ width: "30px", height: "30px", objectFit: "cover" }}

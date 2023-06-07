@@ -9,7 +9,7 @@ const Home = () => {
             <Navbar />
             <Row>
                 <Col>
-
+                    
                 </Col>
             </Row>
         </Container>
