@@ -1,5 +1,6 @@
-import { Post } from "./organisms/index";
+import { Post, MainNavbar } from "./organisms/index";
 
 export {
-    Post
+    Post,
+    MainNavbar
 }

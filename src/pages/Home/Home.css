@@ -12,6 +12,7 @@
 }
 
 .navbar .navbar-brand{
+    font-size: 24px;
     color: #F4EEE0;
 }
 
@@ -19,4 +20,20 @@
 .navbar .nav-link:hover {
     color: #E94560;
     border-bottom: solid 1px #E94560;
+}
+
+.search-bar .form-control {
+    background-color: #5d5972;
+    height: 2.225rem;
+    border-radius: 2px;
+    border: solid 1px #464355;
+    color: #F4EEE0;
+}
+
+.posts-feed-container {
+    margin: 0;
+}
+
+.post-container {
+    margin: 1rem 0;
 }
