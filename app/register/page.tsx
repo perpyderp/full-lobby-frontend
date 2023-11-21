@@ -17,6 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 
+import axios from "axios";
+
 const formSchema = z.object({
     username: z.string().min(2).max(50),
     email: z
@@ -45,58 +47,62 @@ export default function Register() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
+        
         console.log(values)
     }
 
     return (
-        <>
+        <div className="flex flex-col mx-auto">
             
         <Form {...form}>
-            <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                        <Input placeholder="shadcn" {...field} />
-                    </FormControl>
-                    <FormDescription>This is your public display name.</FormDescription>
-                    <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                        <Input placeholder="shadcn" {...field} />
-                    </FormControl>
-                    <FormDescription>For verification and recovery</FormDescription>
-                    <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                        <Input placeholder="shadcn" {...field} />
-                    </FormControl>
-                    <FormDescription>For verification and recovery</FormDescription>
-                    <FormMessage />
-                    </FormItem>
-                )}
-            />
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Username</FormLabel>
+                        <FormControl>
+                            <Input placeholder="shadcn" {...field} />
+                        </FormControl>
+                        <FormDescription>This is your public display name.</FormDescription>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                            <Input placeholder="shadcn" {...field} />
+                        </FormControl>
+                        <FormDescription>For verification and recovery</FormDescription>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                            <Input placeholder="shadcn" {...field} />
+                        </FormControl>
+                        <FormDescription>Enter a long and secure password</FormDescription>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit">Create account</Button>
+            </form>
         </Form>
 
             
-        </>
+        </div>
     )
 }
