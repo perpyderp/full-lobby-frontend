@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Full Lobby',
-  description: 'Review, share, and socialize gaming experiences',
+  description: 'Socialize, review, and share gaming experiences',
 }
 
 export default function RootLayout({
