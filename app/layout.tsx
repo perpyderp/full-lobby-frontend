@@ -4,6 +4,9 @@ import './globals.css'
 import Navbar from '@/components/ui/navbar'
 
 import { ThemeProvider } from "@/components/theme-provider"
+import { cn } from '@/lib/utils'
+
+import { SessionProvider } from "next-auth/react"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,24 +17,29 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  session,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  session: JSX.Element
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <header className="flex justify-center">
-            <Navbar />
-          </header>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+      <html lang="en">
+          <SessionProvider session={session}>
+   
+          <body className={(cn("relative h-full"), inter.className)}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Navbar/>
+              <main>
+                {children}
+              </main>
+            </ThemeProvider>
+          </body>
+        </SessionProvider>
+      </html>
   )
 }

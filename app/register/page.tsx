@@ -20,20 +20,22 @@ import { toast } from "@/components/ui/use-toast";
 import axios from "axios";
 
 const formSchema = z.object({
-    username: z.string().min(2).max(50),
+    username: z
+        .string()
+        .min(5, { message: "Username must be longer than 5 characters"})
+        .max(50),
     email: z
         .string()
         .min(1, { message: "This field has to be filled." })
         .email("Not a valid email"),
     password: z
         .string()
-        .min(8)
+        .min(8, { message: "Password must be longer than 8 characters"})
         .regex(/[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}/)
 })
 
 export default function Register() {
 
-    // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -43,16 +45,19 @@ export default function Register() {
         },
     })
     
-    // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        
-        console.log(values)
+        console.log(values);
+        axios.post("http://localhost:8080/api/auth/register", values)
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
     }
 
     return (
-        <div className="flex flex-col mx-auto">
+        <div className="container mx-auto py-3">
             
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -63,7 +68,7 @@ export default function Register() {
                         <FormItem>
                         <FormLabel>Username</FormLabel>
                         <FormControl>
-                            <Input placeholder="shadcn" {...field} />
+                            <Input placeholder="username" {...field} />
                         </FormControl>
                         <FormDescription>This is your public display name.</FormDescription>
                         <FormMessage />
@@ -77,7 +82,7 @@ export default function Register() {
                         <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                            <Input placeholder="shadcn" {...field} />
+                            <Input placeholder="example@email.com" {...field} />
                         </FormControl>
                         <FormDescription>For verification and recovery</FormDescription>
                         <FormMessage />
@@ -91,7 +96,7 @@ export default function Register() {
                         <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                            <Input placeholder="shadcn" {...field} />
+                            <Input type="password" {...field} />
                         </FormControl>
                         <FormDescription>Enter a long and secure password</FormDescription>
                         <FormMessage />
@@ -101,8 +106,6 @@ export default function Register() {
                 <Button type="submit">Create account</Button>
             </form>
         </Form>
-
-            
         </div>
     )
 }

@@ -1,12 +1,13 @@
 
+import { MaxWidthWrapper } from "@/components/MaxWidthWrapper"
+import Image from "next/image"
+import Link from "next/link"
 import React from "react"
 
 export default function Home() {
   return (
-    <>
-      <main className="min-h-screen">
-        
-      </main>
-    </>
+    <div className="grid-cols-3 grid-rows-1">
+    
+    </div>
   )
 }
