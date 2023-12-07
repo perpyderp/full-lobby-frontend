@@ -2,7 +2,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Profile() {
 
-    
+
 
     return (
         <div className="container mx-auto">
@@ -21,7 +21,7 @@ export default function Profile() {
 
                 <div>Name: <span>First Name Last Name</span></div>
                 <div>Birthday: <span>2/2/2000</span></div>
-                <div>Bio: <p>Welcome to my profile! Stick around and check out what I've made!</p></div>
+                <div>Bio: <p>Welcome to my profile! Stick around and check out what I&apos;ve made!</p></div>
             </div>
         </div>
     )

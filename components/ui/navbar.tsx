@@ -78,23 +78,17 @@ export default function Navbar() {
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
                       Profile
-                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       Billing
-                      <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       Settings
-                      <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>New Team</DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <Link href="/logout">
-                      Logout
-                    </Link>
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
