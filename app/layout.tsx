@@ -5,8 +5,7 @@ import Navbar from '@/components/ui/navbar'
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from '@/lib/utils'
-
-import { SessionProvider } from "next-auth/react"
+import AuthProvider from './Provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,29 +16,26 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  session,
 }: {
   children: React.ReactNode,
-  session: JSX.Element
 }) {
   return (
       <html lang="en">
-          <SessionProvider session={session}>
-   
           <body className={(cn("relative h-full"), inter.className)}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navbar/>
-              <main>
-                {children}
-              </main>
-            </ThemeProvider>
+            <AuthProvider >
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Navbar/>
+                <main>
+                  {children}
+                </main>
+              </ThemeProvider>
+            </AuthProvider>
           </body>
-        </SessionProvider>
       </html>
   )
 }

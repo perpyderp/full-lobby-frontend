@@ -1,13 +1,14 @@
+"use client"
 
-import { MaxWidthWrapper } from "@/components/MaxWidthWrapper"
-import Image from "next/image"
-import Link from "next/link"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useSession, signIn, signOut } from "next-auth/react"
 import React from "react"
 
 export default function Home() {
+
   return (
-    <div className="grid-cols-3 grid-rows-1">
-    
-    </div>
+    <>
+      Home Page
+    </>
   )
 }

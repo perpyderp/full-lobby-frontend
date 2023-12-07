@@ -15,44 +15,37 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
-
-import axios from "axios";
+import { toast } from "@/components/ui/use-toast";
+import { signIn } from "next-auth/react"
 
 const formSchema = z.object({
     username: z
         .string()
         .min(5, { message: "Username must be longer than 5 characters"})
         .max(50),
-    email: z
-        .string()
-        .min(1, { message: "This field has to be filled." })
-        .email("Not a valid email"),
     password: z
         .string()
         .min(8, { message: "Password must be longer than 8 characters"})
         .regex(/[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}/)
 })
 
-export default function Login() {
+export default function Register() {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             username: "",
             password: "",
-            email: "",
         },
     })
     
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
-        axios.post("http://localhost:8080/api/auth/register", values)
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.log(error);
-        })
+        const res = await signIn("credentials", {
+            username: values.username,
+            password: values.password,
+            callbackUrl: "/"
+        });
     }
 
     return (
@@ -76,20 +69,6 @@ export default function Login() {
                 />
                 <FormField
                     control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                            <Input placeholder="example@email.com" {...field} />
-                        </FormControl>
-                        <FormDescription>For verification and recovery</FormDescription>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
                     name="password"
                     render={({ field }) => (
                         <FormItem>
@@ -102,7 +81,7 @@ export default function Login() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Create account</Button>
+                <Button type="submit">Sign In</Button>
             </form>
         </Form>
         </div>
