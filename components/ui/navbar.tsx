@@ -4,19 +4,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "./input";
 import { Search } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuShortcut,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu";
 
 
 export default function Navbar() {
   const { data: session, status } = useSession();
 
-  console.log(session);
   return (
     <nav className="bg-gray-800 bg-opacity-70 font-semibold text-sm flex flex-row justify-evenly h-12 border-b border-slate-500">
-      <div id="logo" className="flex justify-start">
+      <div id="logo" className="flex">
         <Link href="/">
           <Image 
             src="/assets/logo.png"
@@ -27,7 +36,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      <div className="flex items-center space-x-5">
+      <div className="hidden md:flex items-center space-x-5">
         <Search />
         <Input 
           className="h-8"
@@ -44,13 +53,53 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="flex items-center">
+      <div className="hidden md:flex md:items-center">
             {
-              session ? <Avatar className="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8">
-                <AvatarImage src="https://avatars.akamai.steamstatic.com/15a13489bf6f375f0c5505dd4d43a7e2ce1ac015_full.jpg" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar> :
-              <ul>
+              session ? 
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src="https://avatars.akamai.steamstatic.com/15a13489bf6f375f0c5505dd4d43a7e2ce1ac015_full.jpg" alt="@username" />
+                        <AvatarFallback>NL</AvatarFallback>
+                      </Avatar>
+                    </Button> 
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">shadcn</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        m@example.com
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      Profile
+                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Billing
+                      <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Settings
+                      <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>New Team</DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link href="/logout">
+                      Logout
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              :
+              <ul className="flex flex-row space-x-2">
                 <li>
                   <Link href="/sign-in" className="text-slate-200 hover:text-lime-200">
                     Sign In
@@ -63,6 +112,12 @@ export default function Navbar() {
                 </li>
               </ul>
             }
+      </div>
+
+      { /* Mobile Navigation */}
+      <div className="md:hidden">
+        
+
       </div>
     </nav>
   )

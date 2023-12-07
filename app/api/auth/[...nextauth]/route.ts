@@ -32,24 +32,20 @@ const handler = NextAuth({
     ],
     session: {
         strategy: "jwt",
-        maxAge: 30 * 24 * 60 * 60,
     },
     pages: {
         signIn: "/sign-in",
     },
     callbacks: {
-        async jwt({ token, user, account, profile }) {
+        async jwt({ token, user }) {
             return { ...token, ...user }
         },
-        async session({ session, token, user }) {
+        async session({ session, token }) {
             session.user = token as any;
             return session;
         }
     },
     secret: process.env.NEXTAUTH_SECRET,
-    jwt: {
-        
-    }
 })
 
 export { handler as GET, handler as POST }
