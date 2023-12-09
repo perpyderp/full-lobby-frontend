@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { 
   DropdownMenu,
   DropdownMenuTrigger,
-  DropdownMenuShortcut,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -87,8 +86,10 @@ export default function Navbar() {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    Logout
+                  <DropdownMenuItem
+                    onClick={() => signOut()}
+                  >
+                      Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -1,9 +1,11 @@
-"use client"
+import { cn } from "@/lib/utils"
 
-export default function UserDailies() {
+interface UserDailiesProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export const UserDailies: React.FC = ({className, ...props}: UserDailiesProps) => {
 
     return (
-        <div>
+        <div className={cn("md:col-start-2 md:col-span-2", className)} {...props}>
             <h3>Username</h3>
             <h4>Daily Tasks</h4>
             <ul>

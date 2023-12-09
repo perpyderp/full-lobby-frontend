@@ -15,8 +15,9 @@ import {
   FormMessage,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input";
-import { toast } from "@/components/ui/UseToast";
 import { signIn } from "next-auth/react"
+import { useState } from "react"
+import { toast } from "@/components/ui/UseToast"
 
 const formSchema = z.object({
     username: z
@@ -31,6 +32,8 @@ const formSchema = z.object({
 
 export default function Register() {
 
+    const [isLoading, setIsLoading] = useState<Boolean>(false)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -39,20 +42,32 @@ export default function Register() {
         },
     })
     
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-        const res = await signIn("credentials", {
-            username: values.username,
-            password: values.password,
-            callbackUrl: "/"
-        });
+    const login = async (values: z.infer<typeof formSchema>) => {
+        setIsLoading(true)
+        try {
+            await signIn("credentials", {
+                username: values.username,
+                password: values.password,
+                callbackUrl: "/"
+            })
+        }
+        catch(error) {
+            toast({
+                title: "An error has occurred when trying to sign in",
+                description: "ERROR",
+                variant: "destructive"
+            })
+        }
+        finally {
+            setIsLoading(false)
+        }
     }
 
     return (
         <div className="container mx-auto py-3">
             
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(login)} className="space-y-8">
                 <FormField
                     control={form.control}
                     name="username"
@@ -81,7 +96,11 @@ export default function Register() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Sign In</Button>
+                <Button 
+                    type="submit"
+                >
+                    Sign In
+                </Button>
             </form>
         </Form>
         </div>

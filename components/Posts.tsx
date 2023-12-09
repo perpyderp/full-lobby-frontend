@@ -1,19 +1,14 @@
+import { cn } from "@/lib/utils"
 
-export default async function Posts() {
+interface PostsProps extends React.HTMLAttributes<HTMLDivElement>{ }
 
-    async function getPosts() {
-
-
-    }
-
-    const data = await getPosts();
+export const Posts: React.FC<PostsProps> = ({className, ...props}) => {
 
     return (
-
-        <section id="posts" className="flex flex-col gap-2 justify-center">
+        <div id="posts" className={cn("flex flex-col gap-2 justify-center items-center md:col-start-4 md:col-end-8", className)} {...props}>
             <div className="">
                 Post 1
             </div>
-        </section>
+        </div>
     )
 }
