@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { cn } from '@/lib/utils'
 import AuthProvider from './Provider'
 
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -35,6 +37,7 @@ export default function RootLayout({
                 </main>
               </ThemeProvider>
             </AuthProvider>
+            <SpeedInsights />
           </body>
       </html>
   )
