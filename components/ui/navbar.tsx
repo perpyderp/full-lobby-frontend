@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Input } from "./input";
+import { Input } from "./Input";
 import { Search } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/Button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { 
   DropdownMenu,
   DropdownMenuTrigger,
@@ -17,7 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuGroup,
   DropdownMenuItem
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/DropdownMenu";
 
 
 export default function Navbar() {

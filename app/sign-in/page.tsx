@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import {
   Form,
   FormControl,
@@ -13,9 +13,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+} from "@/components/ui/Form"
+import { Input } from "@/components/ui/Input";
+import { toast } from "@/components/ui/UseToast";
 import { signIn } from "next-auth/react"
 
 const formSchema = z.object({
