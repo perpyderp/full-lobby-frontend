@@ -20,10 +20,24 @@ const handler = NextAuth({
                     headers: { "Content-Type": "application/json" }
                 })
                 const user = await res.json()
-
-
+                const userInfo = user.user;
+                // console.log(user);
                 if (res.ok && user.id !== "") {
-                    return user;
+                    return {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                        email: userInfo.email,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        dob: userInfo.dob,
+                        bio: userInfo.bio,
+                        nickname: userInfo.nickname,
+                        avatar: userInfo.avatar,
+                        banner: userInfo.banner,
+                        verified: userInfo.verified,
+                        authorities: userInfo.authorities,
+                        accessToken: userInfo.token,
+                    };
                 }
 
                 return null
@@ -41,8 +55,15 @@ const handler = NextAuth({
             return { ...token, ...user }
         },
         async session({ session, token }) {
-            session.user = token as any;
-            return session;
+          if(token) {
+            session.user.id = token.id;
+            session.user.email = token.email;
+            session.user.avatar = token.avatar;
+            session.user.username = token.username;
+            session.user.accessToken = token.accessToken;
+
+          }
+          return session;
         }
     },
     secret: process.env.NEXTAUTH_SECRET,
