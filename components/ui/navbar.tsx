@@ -24,16 +24,15 @@ export default function Navbar() {
 
   return (
     <nav className="bg-gray-800 bg-opacity-70 font-semibold text-sm flex flex-row justify-evenly h-12 border-b border-slate-500">
-      <div id="logo" className="flex">
-        <Link href="/">
+        <Link href="/" className="flex gap-2 items-center">
           <Image 
             src="/assets/logo.png"
             alt="logo"
             height={48}
             width={48}
           />
+          <p className="hidden md:block text-lg font-medium">Full Lobby</p>
         </Link>
-      </div>
 
       <div className="hidden md:flex items-center space-x-5">
         <Search />
