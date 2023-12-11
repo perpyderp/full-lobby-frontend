@@ -4,26 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "./Input";
 import { Search } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
-import { Button } from "@/components/ui/Button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
-import { 
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuShortcut,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuGroup,
-  DropdownMenuItem
-} from "@/components/ui/DropdownMenu";
 import { UserNav } from "./UserNav";
 
 
 export default function Navbar() {
   const { data: session, status } = useSession();
-
   return (
     <nav className="bg-gray-800 bg-opacity-70 font-semibold text-sm flex flex-row justify-evenly h-12 border-b border-slate-500">
       <div id="logo" className="flex">

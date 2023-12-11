@@ -20,24 +20,12 @@ const handler = NextAuth({
                     headers: { "Content-Type": "application/json" }
                 })
                 const user = await res.json()
-                const userInfo = user.user;
                 // console.log(user);
-                if (res.ok && user.id !== "") {
+                if (res.ok && user != null) {
                     return {
-                        id: userInfo.id,
-                        username: userInfo.username,
-                        email: userInfo.email,
-                        firstName: userInfo.firstName,
-                        lastName: userInfo.lastName,
-                        dob: userInfo.dob,
-                        bio: userInfo.bio,
-                        nickname: userInfo.nickname,
-                        avatar: userInfo.avatar,
-                        banner: userInfo.banner,
-                        verified: userInfo.verified,
-                        authorities: userInfo.authorities,
-                        accessToken: userInfo.token,
-                    };
+                        ...user.user,
+                        accessToken: user.token
+                    }
                 }
 
                 return null
@@ -51,19 +39,41 @@ const handler = NextAuth({
         signIn: "/sign-in",
     },
     callbacks: {
-        async jwt({ token, user }) {
-            return { ...token, ...user }
-        },
-        async session({ session, token }) {
-          if(token) {
-            session.user.id = token.id;
-            session.user.email = token.email;
-            session.user.avatar = token.avatar;
-            session.user.username = token.username;
-            session.user.accessToken = token.accessToken;
+        async jwt({ token, user, session }) {
+            // console.log("JWT Callback: " + JSON.stringify({token, user, session}, null, 2))
 
-          }
-          return session;
+            // user only exists on sign-in
+            if(user) {
+                return {
+                    ...token,
+                    ...user
+                }
+            }
+            return token;
+        },
+        async session({ session, user, token }) {
+            // console.log("Session Callback: " + JSON.stringify({token, user, session}, null, 2) )
+
+            /*
+                token contains all the user information we need, we can pass whatever we want to the session in the return statement.
+            */ 
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.id,
+                    username: token.username,
+                    firstName: token.firstName,
+                    lastName: token.lastName,
+                    dob: token.dob,
+                    bio: token.bio,
+                    nickname: token.nickname,
+                    avatar: token.avatar,
+                    banner: token.banner,
+                    verified: token.verified,
+                    accessToken: token.accessToken
+                }
+            }
         }
     },
     secret: process.env.NEXTAUTH_SECRET,

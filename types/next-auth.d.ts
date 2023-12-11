@@ -1,39 +1,64 @@
-import type { Session, User } from "next-auth/";
+import type { DefaultSession, Session } from "next-auth/";
 import type { JWT } from "next-auth/jwt";
-
-declare module "next-auth/jwt" {
-    interface JWT {
-        id: long,
-        username: string | null,
-        email?: string | null,
-        firstName?: string | null,
-        avatar?: string | null,
-        authorities: [
-            {
-                roleId: 1 | 2,
-                authority: "USER" | "ADMIN"
-            }
-        ]
-        accessToken?: string | null,
-    }
-}
 
 declare module "next-auth/" {
     interface Session {
-        user: User,
+        user: {
+            id: number,
+            username: string,
+            email: string,
+            firstName?: string | null,
+            lastName?: string | null,
+            dob?: string | null,
+            bio?: string | null,
+            nickname?: string | null,
+            avatar?: string | null,
+            banner?: string | null,
+            verified: Boolean,
+            accessToken: string
+        }
     }
     interface User {
-        id: long,
-        username?: string | null,
-        email?: string | null,
+        id: number,
+        username: string,
+        email: string,
         firstName?: string | null,
+        lastName?: string | null,
+        dob?: string | null,
+        bio?: string | null,
+        nickname?: string | null,
         avatar?: string | null,
+        banner?: string | null,
+        verified: Boolean,
         authorities: [
             {
-                roleId: 1 | 2,
-                authority: "USER" | "ADMIN"
+                roleId: number,
+                authority: string
             }
         ]
-        accessToken?: string | null,
+        accessToken: string
     }
 }
+
+// declare module "next-auth/jwt" {
+//     interface JWT extends DefaultJWT{
+//         id: number,
+//         username: string,
+//         email: string,
+//         firstName?: string | null,
+//         lastName?: string | null,
+//         dob?: string | null,
+//         bio?: string | null,
+//         nickname?: string | null,
+//         avatar?: string | null,
+//         banner?: string | null,
+//         verified: Boolean,
+//         authorities: [
+//             {
+//                 roleId: number,
+//                 authority: string
+//             }
+//         ]
+//         accessToken: string
+//     }
+// }

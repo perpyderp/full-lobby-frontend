@@ -1,28 +1,58 @@
+"use client"
+
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar";
+import { useSession } from "next-auth/react";
 
-export default function Profile() {
+interface ProfileProps {
+    params: {
+        slug: string,
+    }
+    avatar: string,
+}
 
+const Profile: React.FC<ProfileProps> = ({params, avatar}) => {
 
+    const { data: session, status } = useSession();
+
+    if(session && session.user.username === params.slug) {
+        return (
+            <div>
+                <h2 className="text-lg">{session.user.username}</h2>
+            </div>
+        )
+    }
 
     return (
         <div className="container mx-auto">
             <div className="flex flex-col">
                 <div className="flex flex-row space-x-4">
                 <Avatar>
-                    <AvatarImage src="https://avatars.akamai.steamstatic.com/15a13489bf6f375f0c5505dd4d43a7e2ce1ac015_full.jpg" />
+                    <AvatarImage src="" />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 
-                    <h2 className="text-3xl">Username</h2>
+                    <h2 className="text-3xl">{session?.user.username}</h2>
                     <div >
                         Player Level: 100
                     </div>
                 </div>
 
-                <div>Name: <span>First Name Last Name</span></div>
-                <div>Birthday: <span>2/2/2000</span></div>
-                <div>Bio: <p>Welcome to my profile! Stick around and check out what I&apos;ve made!</p></div>
+                <div>Name: <span>{session?.user.firstName + " " + session?.user.lastName}</span></div>
+                <div>Birthday: <span>{session?.user.dob}</span></div>
+                <div>
+                    {
+                        session?.user.bio ?
+                        <>
+                            {session?.user.bio}
+                        </> :
+                        <>
+                            No bio
+                        </>
+                    }
+                </div>
             </div>
         </div>
     )
 }
+
+export default Profile;
