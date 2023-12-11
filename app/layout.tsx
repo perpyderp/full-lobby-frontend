@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import AuthProvider from './Provider'
 
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode,
 }) {
   return (
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
           <body className={(cn("relative h-full"), inter.className)}>
             <AuthProvider >
               <ThemeProvider
@@ -37,6 +38,7 @@ export default function RootLayout({
                 </main>
               </ThemeProvider>
             </AuthProvider>
+            <Toaster />
             <SpeedInsights />
           </body>
       </html>
