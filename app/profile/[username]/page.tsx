@@ -1,58 +1,91 @@
-"use client"
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar";
-import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { BadgeCheck, BadgeX } from "lucide-react";
 
 interface ProfileProps {
     params: {
-        slug: string,
+        username: string,
     }
-    avatar: string,
 }
 
-const Profile: React.FC<ProfileProps> = ({params, avatar}) => {
+interface UserData {
+    id: number,
+    username: string,
+    email: string,
+    firstName: string | null,
+    lastName: string | null,
+    dob: string | null,
+    bio: string | null,
+    nickname: string | null,
+    avatar: string | null,
+    banner: string | null,
+    verified: Boolean,
+    authorities: [ { roleId: 1 | 2, authority: "USER" | "ADMIN" } ]
+}
 
-    const { data: session, status } = useSession();
+async function getUser(username:string) {
+    const res = await fetch(`http://localhost:8080/api/user/${username}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+    })
 
-    if(session && session.user.username === params.slug) {
-        return (
-            <div>
-                <h2 className="text-lg">{session.user.username}</h2>
-            </div>
-        )
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      throw new Error('Failed to fetch data')
+    }
+   
+    return res.json()
+}
+
+export default async function Profile({params}: ProfileProps) {
+
+    const userData:UserData = await getUser(params.username);
+
+    const addFriend = () => {
+        console.log("Add friend")
     }
 
-    return (
+    return (    
         <div className="container mx-auto">
-            <div className="flex flex-col">
-                <div className="flex flex-row space-x-4">
-                <Avatar>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
+            <Card className="flex flex-row justify-between px-3 py-5">
+                <Avatar className="h-20 w-20">
                     <AvatarImage src="" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>{userData.username}</AvatarFallback>
                 </Avatar>
-                
-                    <h2 className="text-3xl">{session?.user.username}</h2>
-                    <div >
-                        Player Level: 100
+                <div>
+                    <div className="text-xl flex flex-row">
+                        <span className="flex flex-row gap-2">
+                            {userData.username}
+                        {
+                            userData.verified ?
+                            <BadgeCheck /> :
+                            <BadgeX />
+                        }
+                        </span>
+                    </div>
+                    <div id="bio" className="text-sm">
+                        {
+                            userData.bio ?
+                            <>
+                                {userData.bio}
+                            </> :
+                            <>
+                                No bio
+                            </>
+                        }
                     </div>
                 </div>
+                <div className="flex flex-col items-center">
+                    <p>Player Level: 100</p>
+                    <Button>Add friend</Button>
 
-                <div>Name: <span>{session?.user.firstName + " " + session?.user.lastName}</span></div>
-                <div>Birthday: <span>{session?.user.dob}</span></div>
-                <div>
-                    {
-                        session?.user.bio ?
-                        <>
-                            {session?.user.bio}
-                        </> :
-                        <>
-                            No bio
-                        </>
-                    }
                 </div>
-            </div>
+
+            </Card>
         </div>
+    </div>
     )
 }
-
-export default Profile;

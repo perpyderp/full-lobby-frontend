@@ -15,18 +15,19 @@ import {
   FormMessage,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input";
-import { toast } from "@/components/ui/UseToast";
+import { useRouter } from 'next/navigation'
 
 import axios from "axios";
+import { toast } from "@/components/ui/UseToast"
 
 const formSchema = z.object({
     username: z
         .string()
-        .min(5, { message: "Username must be longer than 5 characters"})
+        .min(2, { message: "Username must be longer than 2 characters"})
         .max(50),
     email: z
         .string()
-        .min(1, { message: "This field has to be filled." })
+        .min(2, { message: "Email is not" })
         .email("Not a valid email"),
     password: z
         .string()
@@ -35,6 +36,8 @@ const formSchema = z.object({
 })
 
 export default function Register() {
+
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -45,15 +48,22 @@ export default function Register() {
         },
     })
     
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
-        axios.post("http://localhost:8080/api/auth/register", values)
+        await axios.post("http://localhost:8080/api/auth/register", values)
         .then((response) => {
-            console.log(response);
+            // console.log(response);
+            const user = response.data;
+            console.log(user);
+            router.push("/sign-in")
         })
         .catch((error) => {
-            console.log(error);
+            toast({
+                title: "An error occurred during registration",
+                description: error
+            })
         })
+
     }
 
     return (
