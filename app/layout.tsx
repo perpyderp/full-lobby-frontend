@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
       <html lang="en" suppressHydrationWarning>
           <body className={(cn("relative h-full"), inter.className)}>
-            <AuthProvider >
+            <AuthProvider>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="system"
