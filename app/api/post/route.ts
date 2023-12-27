@@ -4,7 +4,7 @@ export async function POST(req:NextRequest) {
 
     const values = await req.json();
     const token = req.headers.get("Authorization");
-    // console.log(values);
+    console.log(token);
 
     try {
 
@@ -13,7 +13,7 @@ export async function POST(req:NextRequest) {
             body: values,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                "Authorization": `${token}`
             }
         })
         console.log(response.status)

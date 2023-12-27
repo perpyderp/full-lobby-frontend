@@ -39,9 +39,10 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
     })
 
     const onSubmit = async (values: z.infer<typeof postSchema>) => {
-        const token = session?.user.token;
+        const token = session?.user.accessToken;
+        console.log(token);
         try {
-            await fetch("/api/post", {
+            await fetch("http://localhost:8080/api/posts", {
                 method: "POST",
                 body: JSON.stringify(values),
                 headers: {
