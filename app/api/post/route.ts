@@ -16,7 +16,7 @@ export async function POST(req:NextRequest) {
                 "Authorization": `Bearer ${token}`
             }
         })
-        console.log(response    )
+        console.log(response.status)
         return Response.json({data: response}, {status: 200})
     }
     catch(error) {

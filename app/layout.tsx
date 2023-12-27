@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 import AuthProvider from './Provider'
 
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Toaster } from '@/components/ui/toaster'
+import { Toaster } from '@/components/ui/Toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 

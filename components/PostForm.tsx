@@ -41,14 +41,14 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
     const onSubmit = async (values: z.infer<typeof postSchema>) => {
         const token = session?.user.token;
         try {
-            const response = await fetch("/api/post", {
+            await fetch("/api/post", {
                 method: "POST",
                 body: JSON.stringify(values),
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 }
             })
-            console.log(response);
         }
         catch(error) {
             toast({
