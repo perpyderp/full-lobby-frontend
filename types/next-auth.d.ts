@@ -1,28 +1,41 @@
-import NextAuth from "next-auth/";
+import type NextAuth from "next-auth/";
+import type { JWT } from "next-auth/jwt";
 
-declare module "next-auth" {
+declare module "next-auth/" {
     interface Session {
         user: {
-            info: {
-                id: long,
-                username: string,
-                email: string,
-                firstName: string,
-                lastName: string,
-                dob: string,
-                bio: string,
-                nickname: string,
-                avatar: string,
-                banner: string,
-                verified: Boolean,
-                authorities: [
-                    {
-                        roleId: 1 | 2,
-                        authority: "USER" | "ADMIN"
-                    }
-                ]
-            },
-            token: string,
+            id: number,
+            username: string,
+            email: string,
+            firstName?: string | null,
+            lastName?: string | null,
+            dob?: string | null,
+            bio?: string | null,
+            nickname?: string | null,
+            avatar?: string | null,
+            banner?: string | null,
+            verified: Boolean,
+            accessToken: string
         }
+    }
+    interface User {
+        id: number,
+        username: string,
+        email: string,
+        firstName?: string | null,
+        lastName?: string | null,
+        dob?: string | null,
+        bio?: string | null,
+        nickname?: string | null,
+        avatar?: string | null,
+        banner?: string | null,
+        verified: Boolean,
+        authorities: [
+            {
+                roleId: number,
+                authority: string
+            }
+        ]
+        accessToken: string
     }
 }
