@@ -1,20 +1,21 @@
 import { User } from "next-auth"
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar"
 import { Icons } from "../Icons"
+import { AvatarProps } from "@radix-ui/react-avatar"
 
-interface UserAvatarProps {
-    user: Pick<User, 'name' | 'image'>
+interface UserAvatarProps extends AvatarProps{
+    user: Pick<User, 'name' | 'avatar'>
 }
 
-export const UserAvatar: React.FC<UserAvatarProps> = ({ user }) => {
+export const UserAvatar: React.FC<UserAvatarProps> = ({ user, ...props }) => {
     return (
-        <Avatar>
+        <Avatar {...props}>
             {
-                user.image ? (
-                    <AvatarImage src={user.image} />
+                user.avatar ? (
+                    <AvatarImage src={user.avatar} />
                 ) : (
                     <AvatarFallback>
-                        {user?.name}
+                        {user.name}
                         <Icons.user />
                     </AvatarFallback>
                 )
