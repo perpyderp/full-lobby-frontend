@@ -16,6 +16,10 @@ import { TextArea } from "./ui/TextArea";
 import { useSession } from "next-auth/react";
 import { Button } from "./ui/Button";
 import { toast } from "./ui/UseToast";
+import { useState } from "react";
+import { UserAvatar } from "./ui/UserAvatar";
+import { User } from "next-auth/";
+import { Icons } from "./Icons";
 
 
 const postSchema = z.object({
@@ -28,7 +32,25 @@ interface PostFormProps {
 
 export const PostForm: React.FC<PostFormProps> = ({}) => {
 
-    const { data: session, status } = useSession();
+    const session = useSession()
+
+    if(session.status !== "authenticated") return null
+
+    const user = session.data.user
+
+    return <UserPostForm user={user}/>
+
+}
+
+interface UserPostFormProps {
+    user: Pick<User, "name" | "avatar">
+}
+
+export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
+
+    const session = useSession()
+
+    const [isPostLoading, setIsPostLoading] = useState<boolean>(false)
 
     const postForm = useForm<z.infer<typeof postSchema>>({
         resolver: zodResolver(postSchema),
@@ -39,10 +61,11 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
     })
 
     const onSubmit = async (values: z.infer<typeof postSchema>) => {
-        const token = session?.user.accessToken;
-        console.log(token);
+        const token = session.data?.user.accessToken
+
         try {
-            await fetch("http://localhost:8080/api/posts", {
+            setIsPostLoading(true)
+            const response = await fetch("http://localhost:8080/api/posts", {
                 method: "POST",
                 body: JSON.stringify(values),
                 headers: {
@@ -50,28 +73,43 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
                     "Content-Type": "application/json",
                 }
             })
-        }
-        catch(error) {
+            
+            if(response.status === 200) {
+                toast({
+                    title: "Successfully created a post!"
+                })
+                postForm.reset()
+            }
+            else {
+                toast({
+                    title: "Oops! Something went wrong when creating the post. Please try again"
+                })
+            }
+
+        } catch(error) {
             toast({
                 title: "An error occurred when trying to create post",
                 description: `Error: ${error}` 
             })
+        } finally {
+            setIsPostLoading(false)
         }
 
     }
 
     return (
-        <div className="w-full">
+        <div className="flex md:col-start-4 md:col-span-3 border-b gap-4">
+            <div className="w-full flex gap-4 px-4 py-2">
+            <UserAvatar user={user}/>
             <Form {...postForm}>
-                <form onSubmit={postForm.handleSubmit(onSubmit)}>
+                <form onSubmit={postForm.handleSubmit(onSubmit)} className="w-full">
                     <FormField
                         control={postForm.control}
                         name="title"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter a title" {...field}  />
+                                    <Input placeholder="Enter a title" {...field} disabled={isPostLoading} />
                                 </FormControl>
                                 <FormDescription />
                             </FormItem>
@@ -83,15 +121,19 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <TextArea placeholder="description" {...field} />    
+                                    <TextArea placeholder="Gamer moment..." {...field} disabled={isPostLoading} />    
                                 </FormControl>
                                 <FormDescription />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Create post</Button>
+                    <Button type="submit" disabled={isPostLoading}>
+                        { isPostLoading && (<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />)}
+                        Create post
+                    </Button>
                 </form>
             </Form>
+            </div>
         </div>
     )
 }

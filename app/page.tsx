@@ -1,6 +1,7 @@
 "use client"
 
-import { Posts } from "@/components/Posts"
+import { PostForm } from "@/components/PostForm"
+import { RecentPosts } from "@/components/RecentPosts"
 import { UserDailies } from "@/components/UserDailies"
 import React from "react"
 
@@ -10,7 +11,8 @@ export default function Home() {
     <>
       <div className="grid md:grid-cols-8 sm:grid-cols-2 grid-cols-1 justify-center">
           <UserDailies />
-          <Posts />
+          <PostForm />
+          <RecentPosts />
       </div>
     </>
   )
