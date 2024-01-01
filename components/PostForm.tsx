@@ -98,7 +98,7 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
     }
 
     return (
-        <div className="flex md:col-start-4 md:col-span-3 border-b gap-4">
+        <div className="flex border-b gap-4">
             <div className="w-full flex gap-4 px-4 py-2">
             <UserAvatar user={user}/>
             <Form {...postForm}>
