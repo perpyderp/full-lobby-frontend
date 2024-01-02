@@ -1,5 +1,6 @@
 
 import InfiniteScroll from "react-infinite-scroll-component"
+import { Post } from "@/types/index"
 import { Card, CardContent } from "./ui/Card"
 
 type InfinitePostListProps = {

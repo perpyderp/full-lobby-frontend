@@ -1,12 +1,21 @@
-type Post = {
+import { User } from "next-auth/"
+
+export type Post = {
     id: string
     description: string
     createdAt: Date
-    likeCount: number
+    likes: Like[]
     likedByMe: boolean
     user: {
         id: string
-        avatar: string | null
         username: string | null
+        avatar: string | null
+
     }
+}
+
+export type Like = {
+    id: string
+    userId: string
+    postId: string
 }
