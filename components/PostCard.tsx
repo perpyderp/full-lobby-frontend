@@ -2,8 +2,7 @@ import Link from "next/link"
 import { UserAvatar } from "./ui/UserAvatar"
 
 import { Post } from "@/types"
-import { useSession } from "next-auth/react"
-import { HeartIcon } from "lucide-react"
+import { HeartButton } from "./HeartButton"
 
 function dateFormat(date:string) {
 
@@ -16,7 +15,24 @@ function dateFormat(date:string) {
 
 }
 
+interface PostCardProps extends React.HTMLAttributes<HTMLLIElement> {
+    post: Post,
+}
+
 export const PostCard:React.FC<Post> = ({ id, user, description, createdAt, likes, likedByMe }) => {
+
+
+    const handleToggleLike = async () => {
+        const like = {
+            postId: id,
+            userId: user.id
+        }
+        const response = await fetch("/api/posts/like", {
+            method: "POST",
+            body: JSON.stringify(like)
+        })
+    }
+
     return (
         <li className="flex gap-4 border-b px-4 py-4">
             <Link
@@ -36,41 +52,8 @@ export const PostCard:React.FC<Post> = ({ id, user, description, createdAt, like
                     <span>{dateFormat(createdAt.toString())}</span>
                 </div>
                 <p className="whitespace-pre-wrap">{description}</p>
-                <HeartButton likedByMe={likedByMe} likesCount={likes.length} />
+                <HeartButton onClick={handleToggleLike} likedByMe={likedByMe} likesCount={likes.length} />
             </div>
         </li>
-    )
-}
-
-type HeartButtonProps = {
-    likedByMe: boolean
-    likesCount: number
-}
-
-const HeartButton:React.FC<HeartButtonProps> = ({ likedByMe, likesCount }) => {
-
-    const session = useSession()
-    const Heart = likedByMe ? <HeartIcon fill="red"/> : <HeartIcon />
-
-    if(session.status !== "authenticated") {
-        return (
-            <div className="my-1 flex items-center gap-3 self-start">
-                {Heart}
-                <span>{likesCount}</span>
-            </div>
-        )
-    }
-    return (
-        <button className={`group items-center gap-1 self-start flex transition-colors duration-200 ${
-            likedByMe 
-                ? "text-red-500"
-                : "text-gray-500 hover:text-red-500 focus-visible:text-red-500"}`}>
-            <HeartIcon className={`transition-colors duration-200 ${likedByMe 
-                ? "fill-red-500"
-                : "fill-gray-500 group-hover:fill-gray-500 group-focus-visible:fill-red-500"}`}
-                fill={"red"}
-            />
-            <span>{likesCount}</span>
-        </button>
     )
 }

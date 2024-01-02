@@ -1,7 +1,8 @@
 
 import InfiniteScroll from "react-infinite-scroll-component"
 import { Post } from "@/types/index"
-import { Card, CardContent } from "./ui/Card"
+import { PostCard } from "./PostCard"
+import { PostSkeleton } from "./ui/PostSkeleton"
 
 type InfinitePostListProps = {
     isLoading: boolean
@@ -13,7 +14,7 @@ type InfinitePostListProps = {
 
 export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoading, isError, hasMore, fetchNewTweets }) => {
 
-    if(isLoading) return <h1>Loading</h1>
+    if(isLoading) return <PostSkeleton />
     if(isError) return <h1>Error occurred...</h1>
     if(posts == null || posts.length === 0) {
         return (
@@ -29,13 +30,14 @@ export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoad
                 dataLength={posts.length}
                 next={fetchNewTweets}
                 hasMore={hasMore}
-                loader={"Loading"}
+                loader={"Loading..."}
             >
                 {posts.map((post) => {
                     return (
-                        <div key={post.id}>
-                            {post.description}
-                        </div>
+                        <PostCard
+                            key={post.id}
+                            {...post}
+                        />
                     )
                 })}
             </InfiniteScroll>

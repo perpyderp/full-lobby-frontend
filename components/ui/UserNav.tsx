@@ -1,3 +1,4 @@
+"use client"
 
 import { 
   DropdownMenu, 
@@ -11,13 +12,30 @@ from "@/components/ui/DropdownMenu";
 import { User } from "next-auth";
 import { UserAvatar } from "./UserAvatar";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
-interface UserNavProps {
-    user: Pick<User, "username" | "avatar" | "email">
-}
+interface UserNavProps {}
 
-export const UserNav: React.FC<UserNavProps> = ({ user }) => {
+export const UserNav: React.FC<UserNavProps> = () => {
+
+    const session = useSession()
+    if(session.status !== "authenticated") return (
+        <ul className="flex flex-row space-x-2">
+            <li>
+            <Link href="/sign-in" className="text-slate-200 hover:text-lime-200">
+                Sign In
+            </Link>
+            </li>
+            <li>
+            <Link href="/register" className="text-slate-200 hover:text-lime-200">
+                Register
+            </Link>
+            </li>
+        </ul>
+    )
+
+  const user = session.data.user
+
     return (
         <DropdownMenu>
         <DropdownMenuTrigger>

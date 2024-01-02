@@ -38,7 +38,7 @@ export default function Register() {
             await signIn("credentials", {
                 username: values.username,
                 password: values.password,
-                callbackUrl: "/"
+                redirect: true
             })
         }
         catch(error) {

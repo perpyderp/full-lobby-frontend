@@ -1,4 +1,3 @@
-"use client"
 
 import { PostForm } from "@/components/PostForm"
 import { RecentPosts } from "@/components/RecentPosts"
