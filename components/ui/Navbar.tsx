@@ -12,6 +12,7 @@ import { UserNav } from "./UserNav";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
+  if(status === "loading") return null
   return (
     <nav className="bg-gray-800 bg-opacity-70 font-semibold text-sm flex flex-row justify-between h-14 items-center border-b border-slate-500">
         <Link href="/" className="flex items-center ml-4">

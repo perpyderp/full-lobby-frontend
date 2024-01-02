@@ -18,31 +18,21 @@ import { Input } from "@/components/ui/Input";
 import { signIn } from "next-auth/react"
 import { useState } from "react"
 import { toast } from "@/components/ui/UseToast"
-
-const formSchema = z.object({
-    username: z
-        .string()
-        .min(5, { message: "Username must be longer than 5 characters"})
-        .max(50),
-    password: z
-        .string()
-        .min(8, { message: "Password must be longer than 8 characters"})
-        .regex(/[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}/)
-})
+import { LoginSchema } from "@/schemas"
 
 export default function Register() {
 
     const [isLoading, setIsLoading] = useState<Boolean>(false)
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof LoginSchema>>({
+        resolver: zodResolver(LoginSchema),
         defaultValues: {
             username: "",
             password: "",
         },
     })
     
-    const login = async (values: z.infer<typeof formSchema>) => {
+    const login = async (values: z.infer<typeof LoginSchema>) => {
         setIsLoading(true)
         try {
             await signIn("credentials", {
