@@ -21,17 +21,7 @@ interface PostCardProps extends React.HTMLAttributes<HTMLLIElement> {
 
 export const PostCard:React.FC<Post> = ({ id, user, description, createdAt, likes, likedByMe }) => {
 
-
-    const handleToggleLike = async () => {
-        const like = {
-            postId: id,
-            userId: user.id
-        }
-        const response = await fetch("/api/posts/like", {
-            method: "POST",
-            body: JSON.stringify(like)
-        })
-    }
+    // console.log(likedByMe)
 
     return (
         <li className="flex gap-4 border-b px-4 py-4">
@@ -52,7 +42,7 @@ export const PostCard:React.FC<Post> = ({ id, user, description, createdAt, like
                     <span>{dateFormat(createdAt.toString())}</span>
                 </div>
                 <p className="whitespace-pre-wrap">{description}</p>
-                <HeartButton onClick={handleToggleLike} likedByMe={likedByMe} likesCount={likes.length} />
+                <HeartButton id={id} likedByMe={likedByMe} likesCount={likes.length} />
             </div>
         </li>
     )

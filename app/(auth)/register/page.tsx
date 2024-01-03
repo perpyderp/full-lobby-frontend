@@ -17,7 +17,6 @@ import {
 import { Input } from "@/components/ui/Input";
 import { useRouter } from 'next/navigation'
 
-import axios from "axios";
 import { toast } from "@/components/ui/UseToast"
 
 const formSchema = z.object({
@@ -50,19 +49,18 @@ export default function Register() {
     
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
-        await axios.post("http://localhost:8080/api/auth/register", values)
-        .then((response) => {
-            // console.log(response);
-            const user = response.data;
-            console.log(user);
-            router.push("/sign-in")
+        const response = await fetch("http://localhost:8080/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify(values),
+            headers: {
+                "Content-Type": "application/json"
+            }
         })
-        .catch((error) => {
-            toast({
-                title: "An error occurred during registration",
-                description: error
-            })
-        })
+
+        // console.log(response);
+        const user = await response.json();
+        console.log(user);
+        router.push("/sign-in")
 
     }
 

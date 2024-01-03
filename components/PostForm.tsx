@@ -7,7 +7,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -20,6 +19,8 @@ import { useState } from "react";
 import { UserAvatar } from "./ui/UserAvatar";
 import { User } from "next-auth/";
 import { Icons } from "./Icons";
+import Link from "next/link";
+import { Skeleton } from "./ui/Skeleton";
 
 
 const postSchema = z.object({
@@ -34,7 +35,21 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
 
     const session = useSession()
 
-    if(session.status !== "authenticated") return null
+    if(session.status == "loading") return (
+        <Skeleton className="w-full" />
+    )
+    else if(session.status !== "authenticated") return (
+        <div className="flex flex-col">
+            <h3 className="text-lg">Login to make a post!</h3>
+            <Link
+                href={"/sign-in"}
+            >
+                <Button asChild>
+                    Sign In
+                </Button>
+            </Link>
+        </div>
+    )
 
     const user = session.data.user
 
@@ -43,7 +58,7 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
 }
 
 interface UserPostFormProps {
-    user: Pick<User, "name" | "avatar">
+    user: Pick<User, "username" | "avatar">
 }
 
 export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {

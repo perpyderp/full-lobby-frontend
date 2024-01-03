@@ -4,10 +4,29 @@ import { cn } from "@/lib/utils"
 import { InfinitePostList } from "./InfinitePostList"
 import { Post } from "@/types/index"
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 interface PostProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const RecentPosts: React.FC<PostProps> = ({className, ...props}) => {
+
+    const session = useSession()
+
+    if(session.status === "loading") return "Loading..."
+
+    return <PostsList accessToken={session.data?.user.accessToken} />
+
+}
+
+interface PostsListProps {
+    accessToken?: string | null
+}
+
+const PostsList:React.FC<PostsListProps> = ({ accessToken }) => {
+
+    useEffect(() => {
+        getPosts()
+    }, [])
 
     const [page, setPage] = useState(0)
     const [hasMore, setHasMore] = useState(true)
@@ -17,46 +36,56 @@ export const RecentPosts: React.FC<PostProps> = ({className, ...props}) => {
 
     async function getPosts() {
         setIsLoading(true)
+        const token = accessToken
 
-        const response = await fetch(`http://localhost:8080/api/posts/paginated?page=${page}&size=10`,{
-            method: "GET",
-            cache: "no-cache"
-        })  
-    
-        if(!response.ok) throw new Error("Error occurred fetching posts")
-    
-        const data = await response.json()
-        // console.log(data)
-        setPosts((prevPosts:Post[]) => [...prevPosts, ...data.content]);
-        setPage(page + 1);
-        setHasMore(!data.last); // Stop fetching if it's the last page
-        setIsLoading(false)
-    
-        return data
+        if(token !== undefined || null) {
+
+            const response = await fetch(`http://localhost:8080/api/posts/paginated?page=${page}&size=10`,{
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                next: {
+                    tags: ["posts"]
+                }
+            })  
+        
+            if(!response.ok) throw new Error("Error occurred fetching posts")
+        
+            const data = await response.json()
+            // console.log(data)
+            setPosts((prevPosts:Post[]) => [...prevPosts, ...data.content]);
+            setPage(page + 1);
+            setHasMore(!data.last); // Stop fetching if it's the last page
+            setIsLoading(false)
+        
+            return data
+        }
+        else {
+            const response = await fetch(`http://localhost:8080/api/posts/paginated?page=${page}&size=10`,{
+                method: "GET",
+                next: {
+                    tags: ["posts"]
+                }
+            })  
+        
+            if(!response.ok) throw new Error("Error occurred fetching posts")
+        
+            const data = await response.json()
+            // console.log(data)
+            setPosts((prevPosts:Post[]) => [...prevPosts, ...data.content]);
+            setPage(page + 1);
+            setHasMore(!data.last); // Stop fetching if it's the last page
+            setIsLoading(false)
+        
+            return data
+        }
+
+
     }
 
-    useEffect(() => {
-        getPosts()
-    }, [])
-
     return (
-        // <div className={cn("flex flex-col py-2 px-3", className)} {...props}>
-        //     <ul className="flex flex-col gap-2">
-        //         { posts.map((post:Post) => {
-        //             return (
-        //                 <PostCard
-        //                     key={post.id}
-        //                     id={post.id}
-        //                     likes={post.likes}
-        //                     likedByMe={post.likedByMe}
-        //                     description={post.description}
-        //                     user={post.user}
-        //                     createdAt={post.createdAt}
-        //                 />
-        //             )
-        //         })}
-        //    </ul>
-        // </div>
         <InfinitePostList
             isLoading={isLoading}
             isError={error}

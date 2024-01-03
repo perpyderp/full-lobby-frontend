@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+    // Prevents multiple fetching of data
+    reactStrictMode: false
+}
 
 module.exports = nextConfig
