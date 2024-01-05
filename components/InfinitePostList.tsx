@@ -8,11 +8,11 @@ type InfinitePostListProps = {
     isLoading: boolean
     isError: boolean
     hasMore: boolean
-    fetchNewTweets: () => Promise<unknown>
+    fetchNewPosts: () => Promise<any[] | undefined>
     posts?: Post[]
 }
 
-export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoading, isError, hasMore, fetchNewTweets }) => {
+export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoading, isError, hasMore, fetchNewPosts }) => {
 
     if(isLoading) return <PostSkeleton />
     if(isError) return <h1>Error occurred...</h1>
@@ -28,7 +28,7 @@ export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoad
         <ul>
             <InfiniteScroll
                 dataLength={posts.length}
-                next={fetchNewTweets}
+                next={fetchNewPosts}
                 hasMore={hasMore}
                 loader={"Loading..."}
             >
