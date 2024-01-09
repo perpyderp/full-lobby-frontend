@@ -1,31 +1,19 @@
-"use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { useSession, signIn, signOut } from "next-auth/react"
+import { PostForm } from "@/components/PostForm"
+import { RecentPosts } from "@/components/RecentPosts"
+import { UserDailies } from "@/components/UserDailies"
 import React from "react"
 
 export default function Home() {
 
   return (
     <>
-      <div className="grid grid-cols-4">
-        <div>
-          <h3>Username</h3>
-          <h4>Daily Tasks</h4>
-          <ul>
-            <li>Create a post</li>
-            <li>Like 5 posts</li>
-            <li>Comment on a post</li>
-          </ul>
-          <h4>Weekly Tasks</h4>
-          <ul>
-            <li>Like 40 posts</li>
-            <li></li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        Posts feed
+      <div className="grid md:grid-cols-8 sm:grid-cols-2 grid-cols-1 justify-center">
+          <UserDailies />
+          <div className="md:col-span-3">
+            <PostForm />
+            <RecentPosts />
+          </div>
       </div>
     </>
   )

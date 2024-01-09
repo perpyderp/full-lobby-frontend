@@ -15,44 +15,49 @@ import {
   FormMessage,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input";
-import { toast } from "@/components/ui/UseToast";
 import { signIn } from "next-auth/react"
-
-const formSchema = z.object({
-    username: z
-        .string()
-        .min(5, { message: "Username must be longer than 5 characters"})
-        .max(50),
-    password: z
-        .string()
-        .min(8, { message: "Password must be longer than 8 characters"})
-        .regex(/[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}/)
-})
+import { useState } from "react"
+import { toast } from "@/components/ui/UseToast"
+import { LoginSchema } from "@/schemas"
 
 export default function Register() {
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const [isLoading, setIsLoading] = useState<Boolean>(false)
+
+    const form = useForm<z.infer<typeof LoginSchema>>({
+        resolver: zodResolver(LoginSchema),
         defaultValues: {
             username: "",
             password: "",
         },
     })
     
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-        const res = await signIn("credentials", {
-            username: values.username,
-            password: values.password,
-            callbackUrl: "/"
-        });
+    const login = async (values: z.infer<typeof LoginSchema>) => {
+        setIsLoading(true)
+        try {
+            await signIn("credentials", {
+                username: values.username,
+                password: values.password,
+                redirect: true
+            })
+        }
+        catch(error) {
+            toast({
+                title: "An error has occurred when trying to sign in",
+                description: "ERROR",
+                variant: "destructive"
+            })
+        }
+        finally {
+            setIsLoading(false)
+        }
     }
 
     return (
         <div className="container mx-auto py-3">
             
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(login)} className="space-y-8">
                 <FormField
                     control={form.control}
                     name="username"
@@ -81,7 +86,11 @@ export default function Register() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Sign In</Button>
+                <Button 
+                    type="submit"
+                >
+                    Sign In
+                </Button>
             </form>
         </Form>
         </div>

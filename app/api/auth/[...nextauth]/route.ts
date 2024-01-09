@@ -21,7 +21,7 @@ const handler = NextAuth({
                 })
                 const user = await res.json()
                 // console.log(user);
-                if (res.ok && user != null) {
+                if (res.ok && user.user != null) {
                     return {
                         ...user.user,
                         accessToken: user.token

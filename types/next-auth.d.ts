@@ -1,5 +1,6 @@
 import type NextAuth from "next-auth/";
 import type { JWT } from "next-auth/jwt";
+import type { Image } from "@/types/index"
 
 declare module "next-auth/" {
     interface Session {
@@ -12,8 +13,8 @@ declare module "next-auth/" {
             dob?: string | null,
             bio?: string | null,
             nickname?: string | null,
-            avatar?: string | null,
-            banner?: string | null,
+            avatar?: Avatar | null,
+            banner?: Avatar | null,
             verified: Boolean,
             accessToken: string
         }
@@ -27,10 +28,10 @@ declare module "next-auth/" {
         dob?: string | null,
         bio?: string | null,
         nickname?: string | null,
-        avatar?: string | null,
-        banner?: string | null,
+        avatar?: Avatar | null,
+        banner?: Avatar | null,
         verified: Boolean,
-        authorities: [
+        authorities?: [
             {
                 roleId: number,
                 authority: string
