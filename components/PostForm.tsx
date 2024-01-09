@@ -21,6 +21,7 @@ import { User } from "next-auth/";
 import { Icons } from "./Icons";
 import Link from "next/link";
 import { Skeleton } from "./ui/Skeleton";
+import { mutate } from "swr/_internal";
 
 
 const postSchema = z.object({
@@ -107,6 +108,7 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
                 description: `Error: ${error}` 
             })
         } finally {
+            mutate("http://localhost:8080/api/posts/paginated")
             setIsPostLoading(false)
         }
 

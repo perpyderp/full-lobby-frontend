@@ -3,6 +3,8 @@ import { UserAvatar } from "./ui/UserAvatar"
 
 import { Post } from "@/types"
 import { HeartButton } from "./HeartButton"
+import { KeyedMutator } from "swr"
+import React from "react"
 
 function dateFormat(date:string) {
 
@@ -16,33 +18,33 @@ function dateFormat(date:string) {
 }
 
 interface PostCardProps extends React.HTMLAttributes<HTMLLIElement> {
-    post: Post,
+    post: Post
 }
 
-export const PostCard:React.FC<Post> = ({ id, user, description, createdAt, likes, likedByMe }) => {
+export const PostCard:React.FC<PostCardProps> = ({ post }) => {
 
-    // console.log(likedByMe)
+    console.log(post.likedByMe)
 
     return (
         <li className="flex gap-4 border-b px-4 py-4">
             <Link
-                href={`/profile/${user.username}`}
+                href={`/profile/${post.user.username}`}
             >
-                <UserAvatar user={user}/>
+                <UserAvatar user={post.user}/>
             </Link>
             <div className="flex flex-grow flex-col">
                 <div className="flex gap-1">
                     <Link
-                        href={`/profile/${user.username}`}
+                        href={`/profile/${post.user.username}`}
                         className="font-bold outline-none hover:underline focus-visible:underline"
                     >
-                        {user.username}
+                        {post.user.username}
                     </Link>
                     <span className="">-</span>
-                    <span>{dateFormat(createdAt.toString())}</span>
+                    <span>{dateFormat(post.createdAt.toString())}</span>
                 </div>
-                <p className="whitespace-pre-wrap">{description}</p>
-                <HeartButton id={id} likedByMe={likedByMe} likesCount={likes.length} />
+                <p className="whitespace-pre-wrap">{post.description}</p>
+                <HeartButton id={post.id} likedByMe={post.likedByMe} likesCount={post.likes.length} />
             </div>
         </li>
     )

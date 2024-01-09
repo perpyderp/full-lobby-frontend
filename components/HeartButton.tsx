@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useState, useTransition } from "react"
-import { VscHeart, VscHeartFilled } from "react-icons/vsc"
-import { revalidateTag } from "next/cache"
+import { VscHeartFilled } from "react-icons/vsc"
+import { useSWRConfig } from 'swr';
 
 type HeartButtonProps = {
     id: string
@@ -44,8 +44,8 @@ export const HeartButton:React.FC<HeartButtonProps> = ({ id, likedByMe, likesCou
         setIsFetching(false)
     }
 
-    console.log("Loading authenticated button")
-    console.log(likedByMe)
+    // console.log("Loading authenticated button")
+    // console.log(likedByMe)
 
     return (
         <button 

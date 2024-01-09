@@ -3,16 +3,17 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { Post } from "@/types/index"
 import { PostCard } from "./PostCard"
 import { PostSkeleton } from "./ui/PostSkeleton"
+import { KeyedMutator } from "swr"
 
 type InfinitePostListProps = {
     isLoading: boolean
     isError: boolean
     hasMore: boolean
-    fetchNewPosts: () => Promise<any[] | undefined>
+    loadMorePosts: () => void
     posts?: Post[]
 }
 
-export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoading, isError, hasMore, fetchNewPosts }) => {
+export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoading, isError, hasMore, loadMorePosts }) => {
 
     if(isLoading) return <PostSkeleton />
     if(isError) return <h1>Error occurred...</h1>
@@ -28,7 +29,7 @@ export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoad
         <ul>
             <InfiniteScroll
                 dataLength={posts.length}
-                next={fetchNewPosts}
+                next={loadMorePosts}
                 hasMore={hasMore}
                 loader={"Loading..."}
             >
@@ -36,7 +37,7 @@ export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoad
                     return (
                         <PostCard
                             key={post.id}
-                            {...post}
+                            post={post}
                         />
                     )
                 })}
