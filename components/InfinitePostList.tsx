@@ -31,7 +31,7 @@ export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoad
                 dataLength={posts.length}
                 next={loadMorePosts}
                 hasMore={hasMore}
-                loader={"Loading..."}
+                loader={<PostSkeleton />}
             >
                 {posts.map((post) => {
                     return (

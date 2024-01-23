@@ -18,8 +18,6 @@ export const HeartButton:React.FC<HeartButtonProps> = ({ id, likedByMe, likesCou
     const HeartIcon = VscHeartFilled
 
     const [isFetching, setIsFetching] = useState<boolean>(false)
-    const [isPending, startTransition] = useTransition()
-    const router = useRouter()
 
     if(session.status !== "authenticated") {
         console.log("Loading unauthenticated button")
@@ -50,7 +48,7 @@ export const HeartButton:React.FC<HeartButtonProps> = ({ id, likedByMe, likesCou
     return (
         <button 
             onClick={toggleLike}
-            disabled={isPending}
+            disabled={isFetching}
             className={`group items-center gap-1 self-start flex transition-colors duration-200 ${
             likedByMe 
                 ? "text-red-500"

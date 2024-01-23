@@ -1,5 +1,3 @@
-"use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -23,66 +21,39 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/Popover
 import { Calendar } from "@/components/ui/Calendar"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
+import { auth } from "@/auth"
+import { settingsFormSchema } from "@/schemas"
 
-const settingsFormSchema = z.object({
-    firstName: z
-        .string()
-        .min(0)
-        .max(20)
-        .optional(),
-    lastName: z
-        .string()
-        .min(0)
-        .max(20)
-        .optional(),
-    dob: z
-        .date()
-        .optional(),
-    username: z
-        .string()
-        .min(0)
-        .max(50)
-        .optional(),
-    email: z
-        .string()
-        .min(0)
-        .optional(),
-    password: z
-        .string()
-        .min(0)
-        .optional(),
-})
+const ProfileSettings = async() => {
 
-export default function ProfileSettings() {
+    const session = await auth();
 
-    const { data:session, status } = useSession();
+    // const profileSettingsForm = useForm<z.infer<typeof settingsFormSchema>>({
+    //     resolver: zodResolver(settingsFormSchema),
+    //     defaultValues: {
+    //         firstName: "",
+    //         lastName: "",
+    //         dob: new Date(),
+    //         username: "",
+    //         email: "",
+    //         password: "",
+    //     },
+    // })
 
-    const profileSettingsForm = useForm<z.infer<typeof settingsFormSchema>>({
-        resolver: zodResolver(settingsFormSchema),
-        defaultValues: {
-            firstName: "",
-            lastName: "",
-            dob: new Date(),
-            username: "",
-            email: "",
-            password: "",
-        },
-    })
-
-    const onSubmit = async(values: z.infer<typeof settingsFormSchema>) => {
-        const response = await fetch("http://localhost:8080/api/user", {
-            method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${session?.user.accessToken}`
-            }
-        })
-        console.log(response);
-    }
+    // const onSubmit = async(values: z.infer<typeof settingsFormSchema>) => {
+    //     const response = await fetch("http://localhost:8080/api/user", {
+    //         method: "PUT",
+    //         headers: {
+    //             "Authorization": `Bearer ${session?.user.accessToken}`
+    //         }
+    //     })
+    //     console.log(response);
+    // }
     return (
         <div className="container mx-auto">
             <div className="flex flex-col py-6">
                 <h2 className="text-3xl">Settings</h2>
-                <Form {...profileSettingsForm}>
+                {/* <Form {...profileSettingsForm}>
                     <form onSubmit={profileSettingsForm.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="flex flex-row gap-4">
                         <FormField
@@ -196,8 +167,10 @@ export default function ProfileSettings() {
                             Save Changes
                         </Button>
                     </form>
-                </Form>
+                </Form> */}
             </div>
         </div>
     )
 }
+
+export default ProfileSettings

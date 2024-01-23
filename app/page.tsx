@@ -11,8 +11,8 @@ export default function Home() {
       <div className="grid md:grid-cols-8 sm:grid-cols-2 grid-cols-1 justify-center">
           <UserDailies />
           <div className="md:col-span-3">
-            <PostForm />
-            <RecentPosts />
+            {/* <PostForm />
+            <RecentPosts /> */}
           </div>
       </div>
     </>

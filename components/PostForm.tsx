@@ -7,6 +7,7 @@ import {
   FormDescription,
   FormField,
   FormItem,
+  FormMessage,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -128,7 +129,7 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
                                 <FormControl>
                                     <Input placeholder="Enter a title" {...field} disabled={isPostLoading} />
                                 </FormControl>
-                                <FormDescription />
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -140,7 +141,7 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
                                 <FormControl>
                                     <TextArea placeholder="Gamer moment..." {...field} disabled={isPostLoading} />    
                                 </FormControl>
-                                <FormDescription />
+                                <FormMessage />
                             </FormItem>
                         )}
                     />

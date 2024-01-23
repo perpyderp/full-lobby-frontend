@@ -23,8 +23,6 @@ interface PostCardProps extends React.HTMLAttributes<HTMLLIElement> {
 
 export const PostCard:React.FC<PostCardProps> = ({ post }) => {
 
-    console.log(post.likedByMe)
-
     return (
         <li className="flex gap-4 border-b px-4 py-4">
             <Link

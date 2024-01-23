@@ -2,7 +2,7 @@ import type NextAuth from "next-auth/";
 import type { JWT } from "next-auth/jwt";
 import type { Image } from "@/types/index"
 
-declare module "next-auth/" {
+declare module "test/" {
     interface Session {
         user: {
             id: number,
