@@ -5,7 +5,8 @@ import Link from "next/link"
 const getUserFriends = async(username:string) => {
     const res = await fetch(`http://localhost:8080/api/user/${username}/friends`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        cache: "no-cache"
     })
 
     if (!res.ok) throw new Error('Failed to fetch data')

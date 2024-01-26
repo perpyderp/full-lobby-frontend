@@ -33,7 +33,7 @@ async function getUser(username:string) {
     const res = await fetch(`http://localhost:8080/api/user/${username}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
-        cache: "reload"
+        cache: "no-cache"
     })
 
     if (!res.ok) throw new Error('Failed to fetch data')
@@ -48,6 +48,8 @@ export const UserProfile:NextPage<ProfileProps> = async({params}) => {
     const addFriend = () => {
         console.log("Add friend")
     }
+
+    console.log(userData.id)
 
     return (
         <div className="max-w-screen-xl mx-auto my-8 px-8 flex flex-col gap-y-8">
