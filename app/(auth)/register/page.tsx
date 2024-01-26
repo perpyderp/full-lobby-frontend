@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/Button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,16 +21,15 @@ import { FormError } from "@/components/ui/FormError"
 import { useState, useTransition } from "react"
 import { register } from "@/actions/register"
 import { FormSuccess } from "@/components/ui/FormSuccess"
-
-
+import { Icons } from "@/components/Icons"
 
 export default function Register() {
+
+    const router = useRouter()
 
     const [isPending, startTransition] = useTransition()
     const [error, setError] = useState<string | undefined>()
     const [success, setSuccess] = useState<string | undefined>()
-
-    const router = useRouter();
 
     const registerForm = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
@@ -49,19 +47,14 @@ export default function Register() {
             .then((data) => {
                 setError(data.error)
                 setSuccess(data.success)
+
+                if(data.success) {
+                    setTimeout(() => {
+                        router.push("/login")
+                    }, 5000)
+                }
             })
-            // const response = await fetch("http://localhost:8080/api/auth/register", {
-            //     method: "POST",
-            //     body: JSON.stringify(values),
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     }
-            // })
-    
-            // // console.log(response);
-            // const user = await response.json();
-            // console.log(user);
-            // router.push("/sign-in")
+
         })
 
     }
@@ -119,6 +112,7 @@ export default function Register() {
                     type="submit"
                     disabled={isPending}
                 >
+                    { isPending && (<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />)}
                     Create account
                 </Button>
             </form>

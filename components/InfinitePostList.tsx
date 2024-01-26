@@ -3,7 +3,6 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { Post } from "@/types/index"
 import { PostCard } from "./PostCard"
 import { PostSkeleton } from "./ui/PostSkeleton"
-import { KeyedMutator } from "swr"
 
 type InfinitePostListProps = {
     isLoading: boolean
@@ -16,11 +15,11 @@ type InfinitePostListProps = {
 export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoading, isError, hasMore, loadMorePosts }) => {
 
     if(isLoading) return <PostSkeleton />
-    if(isError) return <h1>Error occurred...</h1>
+    if(isError) return <h1>Error occurred loading posts...</h1>
     if(posts == null || posts.length === 0) {
         return (
-            <h2 className="text-center text-2xl my-4">
-                No posts found
+            <h2 className="text-center text-xl my-4">
+                That's it! You've reached the end of the journey.
             </h2>
         )
     }

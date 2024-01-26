@@ -1,16 +1,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 
-import { Menu } from "lucide-react";
 import { UserNav } from "./UserNav";
-
 
 export default function Navbar() {
 
   return (
-    <nav className="bg-gray-800 bg-opacity-70 font-semibold text-sm flex flex-row justify-between h-14 items-center border-b border-slate-500">
+    <nav className="bg-gray-800 bg-opacity-70 font-semibold text-sm flex flex-row justify-between pl-7 h-14 items-center border-b border-slate-500">
         <Link href="/" className="flex items-center ml-4">
           <Image 
             src="/assets/logo.png"
@@ -21,7 +18,7 @@ export default function Navbar() {
           <p className="pl-2 text-xl">Full Lobby</p>
         </Link>
       
-        <div className="hidden md:flex md:items-center mr-4">
+        <div className="flex md:items-center mr-4">
             <UserNav />
         </div>
 

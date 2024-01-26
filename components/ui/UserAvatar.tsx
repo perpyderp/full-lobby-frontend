@@ -16,7 +16,6 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({ user, ...props }) => {
                     <AvatarImage src={user.avatar.imageUrl} />
                 ) : (
                     <AvatarFallback>
-                        {user.username}
                         <Icons.user />
                     </AvatarFallback>
                 )

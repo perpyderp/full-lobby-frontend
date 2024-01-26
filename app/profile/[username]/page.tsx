@@ -1,10 +1,11 @@
 
+import { FriendsList } from "@/components/FriendsList";
+import { Icons } from "@/components/Icons";
+import { RecentPosts } from "@/components/RecentPosts";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { BadgeCheck, BadgeX } from "lucide-react";
 import { NextPage } from "next";
-import Head from "next/head";
 
 interface ProfileProps {
     params: {
@@ -13,7 +14,7 @@ interface ProfileProps {
 }
 
 interface UserData {
-    id: number,
+    id: string,
     username: string,
     email: string,
     firstName: string | null,
@@ -27,44 +28,36 @@ interface UserData {
     authorities: [ { roleId: 1 | 2, authority: "USER" | "ADMIN" } ]
 }
 
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-    return []
-  }
-
 async function getUser(username:string) {
+
     const res = await fetch(`http://localhost:8080/api/user/${username}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        cache: "reload"
     })
 
-    if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
-    }
+    if (!res.ok) throw new Error('Failed to fetch data')
    
     return res.json()
 }
 
 export const UserProfile:NextPage<ProfileProps> = async({params}) => {
 
-    const userData:UserData = await getUser(params.username);
+    const userData:UserData = await getUser(params.username)
 
     const addFriend = () => {
         console.log("Add friend")
     }
 
     return (
-        <>
-            <Head>
-                <title>{`Full Lobby - ${params.username}`}</title>
-            </Head>
+        <div className="max-w-screen-xl mx-auto my-8 px-8 flex flex-col gap-y-8">
             <div className="flex flex-row justify-between my-2 px-4 py-2">
                 <div className="flex flex-row gap-4">
                 <Avatar className="h-20 w-20">
                     <AvatarImage src="" />
-                    <AvatarFallback>{userData.username}</AvatarFallback>
+                    <AvatarFallback>
+                        <Icons.user />
+                    </AvatarFallback>
                 </Avatar>
                 <div className="">
                     <div className="text-xl flex flex-row">
@@ -72,30 +65,37 @@ export const UserProfile:NextPage<ProfileProps> = async({params}) => {
                             {userData.username}
                         {
                             userData.verified ?
-                            <BadgeCheck /> :
-                            <BadgeX />
+                                <BadgeCheck color="#74c0fc" />
+                            :
+                                <BadgeCheck />
                         }
                         </span>
                     </div>
-                    <div id="bio" className="text-sm">
-                        {
-                            userData.bio ?
-                            <>
-                                {userData.bio}
-                            </> :
-                            <>
-                                No bio
-                            </>
-                        }
+                    <div id="name" className="flex gap-1 text-muted-foreground">
+                        <span id="first-name">{userData.firstName}</span>
+                        <span id="last-name">{userData.lastName}</span>
+                    </div>
+                    <div id="bio" className="text-sm text-muted-foreground">
+                        { userData.bio ? userData.bio : "No bio" }
                     </div>
                 </div>
                 </div>
                 <div className="flex flex-col items-center">
-                    <p>Player Level: 100</p>
+                    <p id="player-level" className="cursor-default">Player Level: 100</p>
                     <Button>Add friend</Button>
                 </div>
             </div>
-        </>
+            <div className="grid md:grid-cols-user-posts gap-5">
+                <aside>
+                    <h2 className="text-2xl">Friends</h2>
+                    <FriendsList username={userData.username} />
+                </aside>
+                <div>
+                    <h2 className="text-2xl">Posts</h2>
+                    <RecentPosts userId={userData.id}/>
+                </div>
+            </div>
+        </div>
     )
 }
 

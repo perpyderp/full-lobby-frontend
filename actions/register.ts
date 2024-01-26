@@ -22,13 +22,19 @@ export const register = async(values: z.infer<typeof registerSchema>) => {
 
     if(await usernameTaken.json()) return { error: "Username is already in use!" }
 
-    await fetch("${process.env.BACKEND_BASE_URL}/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify(values),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
+    try {
+        await fetch(`${process.env.BACKEND_BASE_URL}/api/auth/register`, {
+            method: "POST",
+            body: JSON.stringify(values),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+    } catch(error) {
+        console.log(error)
+        return { error: "Something went wrong!" }
+    }
 
-    return { success: "User created!" }
+
+    return { success: "Registration successful! Redirecting in 5 seconds" }
 }

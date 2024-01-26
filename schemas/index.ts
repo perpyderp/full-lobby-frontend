@@ -52,3 +52,19 @@ export const settingsFormSchema = z.object({
         .min(0)
         .optional(),
 })
+
+export const postSchema = z.object({
+    title: z.string()
+    .min(1, {
+        message: "Title is required"
+    })
+    .max(20, {
+        message: "Title is too long!"
+    }),
+    description: z.string().min(1, {
+        message: "Description is required"
+    })
+    .max(50, {
+        message: "Description is too long! Cool it down a bit"
+    })
+})

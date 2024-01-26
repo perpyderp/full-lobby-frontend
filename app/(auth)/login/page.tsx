@@ -17,16 +17,19 @@ import {
 import { Input } from "@/components/ui/Input";
 import { useState, useTransition } from "react"
 import { FormError } from "@/components/ui/FormError"
-import { FormSuccess } from "@/components/ui/FormSuccess"
 
 import { LoginSchema } from "@/schemas"
 
-import { login } from "@/actions/login"
+import { signIn } from "next-auth/react"
+import { toast } from "@/components/ui/UseToast"
+import { Icons } from "@/components/Icons"
+import { useRouter } from "next/navigation"
 
 export default function Login() {
 
+    const router = useRouter()
+
     const [error, setError] = useState<string | undefined>()
-    const [success, setSuccess] = useState<string | undefined>()
     const [isPending, startTransition] = useTransition()
 
     const loginForm = useForm<z.infer<typeof LoginSchema>>({
@@ -38,30 +41,46 @@ export default function Login() {
     })
     
     const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+
+        const validatedFields = LoginSchema.safeParse(values)
+
+        if(!validatedFields.success){
+            return { error: "Invalid fields!" }
+        }
+    
+        const { username, password } = validatedFields.data
+
         setError("")
-        setSuccess("")
 
-        startTransition(() => {
+        startTransition(async() => {
 
-            login(values)
-            .then((data) => {
-                setError(data.error)
-                setSuccess(data.success)
-            })
-            // try {
-            //     await signIn("credentials", {
-            //         username: values.username,
-            //         password: values.password,
-            //         redirect: true
-            //     })
-            // }
-            // catch(error) {
-            //     toast({
-            //         title: "An error has occurred when trying to sign in",
-            //         description: "ERROR",
-            //         variant: "destructive"
-            //     })
-            // }
+            try {
+                await signIn("credentials", {
+                    username: username,
+                    password: password,
+                    redirect: false
+                })
+                .then((data) => {
+                    if(data?.error) {
+                        console.log(data.error)
+                        switch(data.error) {
+                            case "CredentialsSignin":
+                                setError("Invalid credentials")
+                            default:
+                                setError("Something went wrong")
+                        }
+                    }
+                    if(data?.ok) router.push("/")
+                })
+                
+            }
+            catch(error) {
+                toast({
+                    title: "An error has occurred when trying to sign in",
+                    description: "" + error,
+                    variant: "destructive"
+                })
+            }
         })
     }
 
@@ -85,7 +104,6 @@ export default function Login() {
                                 {...field}
                             />
                         </FormControl>
-                        <FormDescription>This is your public display name.</FormDescription>
                         <FormMessage />
                         </FormItem>
                     )}
@@ -103,17 +121,17 @@ export default function Login() {
                                 {...field}
                             />
                         </FormControl>
-                        <FormDescription>Enter a long and secure password</FormDescription>
                         <FormMessage />
                         </FormItem>
                     )}
                 />
                 <FormError message={error} />
-                <FormSuccess message={success} />
+                {/* <FormSuccess message={success} /> */}
                 <Button
                     disabled={isPending}
                     type="submit"
                 >
+                    { isPending && (<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />)}
                     Sign In
                 </Button>
             </form>

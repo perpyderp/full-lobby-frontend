@@ -6,15 +6,15 @@ import React from "react"
 
 export default function Home() {
 
-  return (
-    <>
-      <div className="grid md:grid-cols-8 sm:grid-cols-2 grid-cols-1 justify-center">
-          <UserDailies />
-          <div className="md:col-span-3">
-            {/* <PostForm />
-            <RecentPosts /> */}
-          </div>
-      </div>
-    </>
-  )
+    return (
+        <div className="mx-auto my-0 max-w-screen-xl px-8 py-0">
+            <div className="grid sm:grid-cols-2 justify-center py-8">
+                <UserDailies />
+                <div className="">
+                    <PostForm />
+                    <RecentPosts />
+                </div>
+            </div>
+        </div>
+    )
 }
