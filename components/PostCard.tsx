@@ -3,27 +3,14 @@ import { UserAvatar } from "./ui/UserAvatar"
 
 import { Post } from "@/types"
 import { HeartButton } from "./HeartButton"
-import { KeyedMutator } from "swr"
 import React from "react"
-
-function dateFormat(date:string) {
-
-    const newDate = new Date(date)
-    const formattedDate = `${(newDate.getMonth() + 1).toString().padStart(2, '0')}/${
-        newDate.getDate().toString().padStart(2, '0')
-        }/${newDate.getFullYear()}`
-
-    return formattedDate
-
-}
+import { dateFormat } from "@/lib/dateFormat"
 
 interface PostCardProps extends React.HTMLAttributes<HTMLLIElement> {
     post: Post
 }
 
 export const PostCard:React.FC<PostCardProps> = ({ post }) => {
-
-    console.log(post.likedByMe)
 
     return (
         <li className="flex gap-4 border-b px-4 py-4">

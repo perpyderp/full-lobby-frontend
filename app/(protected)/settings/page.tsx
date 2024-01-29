@@ -23,39 +23,11 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/Popover
 import { Calendar } from "@/components/ui/Calendar"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
+import { settingsFormSchema } from "@/schemas"
 
-const settingsFormSchema = z.object({
-    firstName: z
-        .string()
-        .min(0)
-        .max(20)
-        .optional(),
-    lastName: z
-        .string()
-        .min(0)
-        .max(20)
-        .optional(),
-    dob: z
-        .date()
-        .optional(),
-    username: z
-        .string()
-        .min(0)
-        .max(50)
-        .optional(),
-    email: z
-        .string()
-        .min(0)
-        .optional(),
-    password: z
-        .string()
-        .min(0)
-        .optional(),
-})
+const ProfileSettings = () => {
 
-export default function ProfileSettings() {
-
-    const { data:session, status } = useSession();
+    const session = useSession();
 
     const profileSettingsForm = useForm<z.infer<typeof settingsFormSchema>>({
         resolver: zodResolver(settingsFormSchema),
@@ -73,10 +45,10 @@ export default function ProfileSettings() {
         const response = await fetch("http://localhost:8080/api/user", {
             method: "PUT",
             headers: {
-                "Authorization": `Bearer ${session?.user.accessToken}`
+                "Authorization": `Bearer ${session?.data?.user.accessToken}`
             }
         })
-        console.log(response);
+        console.log(await response.json());
     }
     return (
         <div className="container mx-auto">
@@ -201,3 +173,5 @@ export default function ProfileSettings() {
         </div>
     )
 }
+
+export default ProfileSettings

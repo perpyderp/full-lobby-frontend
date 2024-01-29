@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/Button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,29 +16,23 @@ import {
 import { Input } from "@/components/ui/Input";
 import { useRouter } from 'next/navigation'
 
-import { toast } from "@/components/ui/UseToast"
-
-const formSchema = z.object({
-    username: z
-        .string()
-        .min(2, { message: "Username must be longer than 2 characters"})
-        .max(50),
-    email: z
-        .string()
-        .min(2, { message: "Email is not" })
-        .email("Not a valid email"),
-    password: z
-        .string()
-        .min(8, { message: "Password must be longer than 8 characters"})
-        .regex(/[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}/)
-})
+import { registerSchema } from "@/schemas"
+import { FormError } from "@/components/ui/FormError"
+import { useState, useTransition } from "react"
+import { register } from "@/actions/register"
+import { FormSuccess } from "@/components/ui/FormSuccess"
+import { Icons } from "@/components/Icons"
 
 export default function Register() {
 
-    const router = useRouter();
+    const router = useRouter()
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const [isPending, startTransition] = useTransition()
+    const [error, setError] = useState<string | undefined>()
+    const [success, setSuccess] = useState<string | undefined>()
+
+    const registerForm = useForm<z.infer<typeof registerSchema>>({
+        resolver: zodResolver(registerSchema),
         defaultValues: {
             username: "",
             password: "",
@@ -47,30 +40,35 @@ export default function Register() {
         },
     })
     
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-        const response = await fetch("http://localhost:8080/api/auth/register", {
-            method: "POST",
-            body: JSON.stringify(values),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
+    async function onSubmit(values: z.infer<typeof registerSchema>) {
+        startTransition(() => {
 
-        // console.log(response);
-        const user = await response.json();
-        console.log(user);
-        router.push("/sign-in")
+            register(values)
+            .then((data) => {
+                setError(data.error)
+                setSuccess(data.success)
+
+                if(data.success) {
+                    setTimeout(() => {
+                        router.push("/login")
+                    }, 5000)
+                }
+            })
+
+        })
 
     }
 
     return (
         <div className="container mx-auto py-3">
             
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Form {...registerForm}>
+            <form 
+                onSubmit={registerForm.handleSubmit(onSubmit)}
+                className="space-y-6"
+            >
                 <FormField
-                    control={form.control}
+                    control={registerForm.control}
                     name="username"
                     render={({ field }) => (
                         <FormItem>
@@ -78,13 +76,12 @@ export default function Register() {
                         <FormControl>
                             <Input placeholder="username" {...field} />
                         </FormControl>
-                        <FormDescription>This is your public display name.</FormDescription>
                         <FormMessage />
                         </FormItem>
                     )}
                 />
                 <FormField
-                    control={form.control}
+                    control={registerForm.control}
                     name="email"
                     render={({ field }) => (
                         <FormItem>
@@ -92,13 +89,12 @@ export default function Register() {
                         <FormControl>
                             <Input placeholder="example@email.com" {...field} />
                         </FormControl>
-                        <FormDescription>For verification and recovery</FormDescription>
                         <FormMessage />
                         </FormItem>
                     )}
                 />
                 <FormField
-                    control={form.control}
+                    control={registerForm.control}
                     name="password"
                     render={({ field }) => (
                         <FormItem>
@@ -106,12 +102,19 @@ export default function Register() {
                         <FormControl>
                             <Input type="password" {...field} />
                         </FormControl>
-                        <FormDescription>Enter a long and secure password</FormDescription>
                         <FormMessage />
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Create account</Button>
+                <FormError message={error} />
+                <FormSuccess message={success} />
+                <Button
+                    type="submit"
+                    disabled={isPending}
+                >
+                    { isPending && (<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />)}
+                    Create account
+                </Button>
             </form>
         </Form>
         </div>

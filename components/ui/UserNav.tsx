@@ -9,7 +9,6 @@ import {
   DropdownMenuGroup, 
   DropdownMenuItem } 
 from "@/components/ui/DropdownMenu";
-import { User } from "next-auth";
 import { UserAvatar } from "./UserAvatar";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -22,8 +21,8 @@ export const UserNav: React.FC<UserNavProps> = () => {
     if(session.status !== "authenticated") return (
         <ul className="flex flex-row space-x-2">
             <li>
-            <Link href="/sign-in" className="text-slate-200 hover:text-lime-200">
-                Sign In
+            <Link href="/login" className="text-slate-200 hover:text-lime-200">
+                Login
             </Link>
             </li>
             <li>

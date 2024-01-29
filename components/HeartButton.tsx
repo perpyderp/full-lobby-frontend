@@ -1,10 +1,9 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { useState, useTransition } from "react"
+import { useContext, useState, useTransition } from "react"
 import { VscHeartFilled } from "react-icons/vsc"
-import { useSWRConfig } from 'swr';
+import { useMutatePostsContext } from "./RecentPosts"
 
 type HeartButtonProps = {
     id: string
@@ -15,14 +14,14 @@ type HeartButtonProps = {
 export const HeartButton:React.FC<HeartButtonProps> = ({ id, likedByMe, likesCount }) => {
 
     const session = useSession()
+
+    const { mutatePosts } = useMutatePostsContext()
+
     const HeartIcon = VscHeartFilled
 
     const [isFetching, setIsFetching] = useState<boolean>(false)
-    const [isPending, startTransition] = useTransition()
-    const router = useRouter()
 
     if(session.status !== "authenticated") {
-        console.log("Loading unauthenticated button")
         return (
             <div className="my-1 flex items-center gap-3 self-start">
                 <HeartIcon />
@@ -41,16 +40,14 @@ export const HeartButton:React.FC<HeartButtonProps> = ({ id, likedByMe, likesCou
             method: "POST",
             body: JSON.stringify(like),
         })
+        mutatePosts()
         setIsFetching(false)
     }
-
-    // console.log("Loading authenticated button")
-    // console.log(likedByMe)
 
     return (
         <button 
             onClick={toggleLike}
-            disabled={isPending}
+            disabled={isFetching}
             className={`group items-center gap-1 self-start flex transition-colors duration-200 ${
             likedByMe 
                 ? "text-red-500"

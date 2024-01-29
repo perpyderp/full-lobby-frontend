@@ -1,4 +1,3 @@
-import { User } from "next-auth/"
 
 export type Post = {
     id: string
@@ -24,7 +23,7 @@ export type Avatar = {
 
 export type UserData = {
     id: string,
-    avatar: Avatar,
+    avatar: Avatar | null,
     username: string
 }
 
@@ -55,4 +54,9 @@ export type PaginatedPostResponse = {
     first: boolean,
     numberOfElements: number,
     empty: boolean
+}
+
+export type Role = {
+    roleId: number,
+    authority: "USER" | "ADMIN"
 }

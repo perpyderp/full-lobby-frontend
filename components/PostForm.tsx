@@ -4,9 +4,9 @@ import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
+  FormMessage,
 } from "@/components/ui/Form"
 import { Input } from "@/components/ui/Input"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,13 +21,7 @@ import { User } from "next-auth/";
 import { Icons } from "./Icons";
 import Link from "next/link";
 import { Skeleton } from "./ui/Skeleton";
-import { mutate } from "swr/_internal";
-
-
-const postSchema = z.object({
-    title: z.string().min(2).max(20),
-    description: z.string().min(2).max(50)
-})
+import { postSchema } from "@/schemas";
 
 interface PostFormProps {
 }
@@ -40,13 +34,14 @@ export const PostForm: React.FC<PostFormProps> = ({}) => {
         <Skeleton className="w-full" />
     )
     else if(session.status !== "authenticated") return (
-        <div className="flex flex-col">
+        <div className="flex flex-col items-center">
             <h3 className="text-lg">Login to make a post!</h3>
             <Link
-                href={"/sign-in"}
+                href={"/login"}
+                passHref
             >
-                <Button asChild>
-                    Sign In
+                <Button variant="secondary" className="rounded-lg">
+                    Login
                 </Button>
             </Link>
         </div>
@@ -98,17 +93,18 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
             }
             else {
                 toast({
-                    title: "Oops! Something went wrong when creating the post. Please try again"
+                    title: "Oops! Something went wrong when creating the post. Please try again",
+                    variant: "destructive"
                 })
             }
 
         } catch(error) {
             toast({
                 title: "An error occurred when trying to create post",
+                variant: "destructive",
                 description: `Error: ${error}` 
             })
         } finally {
-            mutate("http://localhost:8080/api/posts/paginated")
             setIsPostLoading(false)
         }
 
@@ -119,7 +115,7 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
             <div className="w-full flex gap-4 px-4 py-2">
             <UserAvatar user={user}/>
             <Form {...postForm}>
-                <form onSubmit={postForm.handleSubmit(onSubmit)} className="w-full">
+                <form onSubmit={postForm.handleSubmit(onSubmit)} className="flex flex-col gap-4">
                     <FormField
                         control={postForm.control}
                         name="title"
@@ -128,7 +124,7 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
                                 <FormControl>
                                     <Input placeholder="Enter a title" {...field} disabled={isPostLoading} />
                                 </FormControl>
-                                <FormDescription />
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -140,7 +136,7 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
                                 <FormControl>
                                     <TextArea placeholder="Gamer moment..." {...field} disabled={isPostLoading} />    
                                 </FormControl>
-                                <FormDescription />
+                                <FormMessage />
                             </FormItem>
                         )}
                     />

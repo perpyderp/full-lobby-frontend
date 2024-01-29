@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        "user-posts": "16rem 1fr"
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

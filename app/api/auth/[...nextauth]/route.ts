@@ -36,11 +36,18 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     pages: {
-        signIn: "/sign-in",
+        signIn: "/login",
     },
     callbacks: {
         async jwt({ token, user, session }) {
             // console.log("JWT Callback: " + JSON.stringify({token, user, session}, null, 2))
+
+            const res = await fetch(`http://localhost:8080/api/user/${token.username}`, {
+                method: 'GET',
+                headers: { "Content-Type": "application/json" }
+            })
+
+            const userData = await res.json()
 
             // user only exists on sign-in
             if(user) {
@@ -49,7 +56,10 @@ const handler = NextAuth({
                     ...user
                 }
             }
-            return token;
+            return {
+                ...token,
+                ...userData
+            };
         },
         async session({ session, user, token }) {
             // console.log("Session Callback: " + JSON.stringify({token, user, session}, null, 2) )
