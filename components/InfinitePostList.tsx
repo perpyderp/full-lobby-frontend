@@ -15,11 +15,11 @@ type InfinitePostListProps = {
 export const InfinitePostList:React.FC<InfinitePostListProps> = ({ posts, isLoading, isError, hasMore, loadMorePosts }) => {
 
     if(isLoading) return <PostSkeleton />
-    if(isError) return <h1>Error occurred loading posts...</h1>
+    if(isError) return <h2 className="text-center text-xl my-4">Oops. Something went wrong...</h2>
     if(posts == null || posts.length === 0) {
         return (
             <h2 className="text-center text-xl my-4">
-                That's it! You've reached the end of the journey.
+                That&apos;s it! You&apos;ve reached the end of the journey.
             </h2>
         )
     }

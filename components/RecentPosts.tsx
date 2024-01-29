@@ -51,7 +51,18 @@ const PostsList:React.FC<PostsListProps> = ({ accessToken, userId }) => {
             ...(token && { Authorization:`Bearer ${token}`})
         }
     }).then(async(res) => {
-        return res.json()
+
+        if(res.ok) return res.json()
+
+        const resWithoutToken = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        
+        return resWithoutToken.json()
+        
     });
 
     const getKey = (pageIndex:number) => {
