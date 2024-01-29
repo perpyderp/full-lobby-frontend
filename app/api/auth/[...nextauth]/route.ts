@@ -20,10 +20,12 @@ const handler = NextAuth({
                     headers: { "Content-Type": "application/json" }
                 })
                 const user = await res.json()
-
-
-                if (res.ok && user.id !== "") {
-                    return user;
+                // console.log(user);
+                if (res.ok && user.user != null) {
+                    return {
+                        ...user.user,
+                        accessToken: user.token
+                    }
                 }
 
                 return null
@@ -34,15 +36,54 @@ const handler = NextAuth({
         strategy: "jwt",
     },
     pages: {
-        signIn: "/sign-in",
+        signIn: "/login",
     },
     callbacks: {
-        async jwt({ token, user }) {
-            return { ...token, ...user }
+        async jwt({ token, user, session }) {
+            // console.log("JWT Callback: " + JSON.stringify({token, user, session}, null, 2))
+
+            const res = await fetch(`http://localhost:8080/api/user/${token.username}`, {
+                method: 'GET',
+                headers: { "Content-Type": "application/json" }
+            })
+
+            const userData = await res.json()
+
+            // user only exists on sign-in
+            if(user) {
+                return {
+                    ...token,
+                    ...user
+                }
+            }
+            return {
+                ...token,
+                ...userData
+            };
         },
-        async session({ session, token }) {
-            session.user = token as any;
-            return session;
+        async session({ session, user, token }) {
+            // console.log("Session Callback: " + JSON.stringify({token, user, session}, null, 2) )
+
+            /*
+                token contains all the user information we need, we can pass whatever we want to the session in the return statement.
+            */ 
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.id,
+                    username: token.username,
+                    firstName: token.firstName,
+                    lastName: token.lastName,
+                    dob: token.dob,
+                    bio: token.bio,
+                    nickname: token.nickname,
+                    avatar: token.avatar,
+                    banner: token.banner,
+                    verified: token.verified,
+                    accessToken: token.accessToken
+                }
+            }
         }
     },
     secret: process.env.NEXTAUTH_SECRET,
