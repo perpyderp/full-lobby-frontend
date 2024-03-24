@@ -111,11 +111,10 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
     }
 
     return (
-        <div className="flex border-b gap-4">
-            <div className="w-full flex gap-4 px-4 py-2">
+        <div className="flex flex-grow border-b-2 gap-4 pb-4">
             <UserAvatar user={user}/>
             <Form {...postForm}>
-                <form onSubmit={postForm.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                <form onSubmit={postForm.handleSubmit(onSubmit)} className="flex flex-col grow gap-4">
                     <FormField
                         control={postForm.control}
                         name="title"
@@ -146,7 +145,6 @@ export const UserPostForm: React.FC<UserPostFormProps> = ({ user }) => {
                     </Button>
                 </form>
             </Form>
-            </div>
         </div>
     )
 }
